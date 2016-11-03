@@ -28,5 +28,10 @@ class SunspearDuplicateEntryException(SunspearBaseException):
 class SunspearInvalidActivityException(SunspearBaseException):
     pass
 
+
 class SunspearInvalidObjectException(SunspearBaseException):
+    pass
+
+
+class SunspearOperationNotSupportedException(SunspearBaseException):
     pass

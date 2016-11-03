@@ -5,6 +5,7 @@ import datetime
 import six
 from mock import ANY, call, MagicMock
 from nose.tools import eq_, ok_, raises
+from mock import MagicMock, call, ANY
 
 from sunspear.aggregators.property import PropertyAggregator
 from sunspear.backends.riak import RiakBackend

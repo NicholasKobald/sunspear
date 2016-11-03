@@ -21,7 +21,6 @@ import calendar
 import copy
 import datetime
 import uuid
-
 import six
 from riak import RiakClient
 
@@ -147,8 +146,6 @@ JS_REDUCE_OBJS = """
 
 
 class RiakBackend(BaseBackend):
-    custom_epoch = datetime.datetime(month=1, day=1, year=2013)
-
     def __init__(
         self, protocol="pbc", nodes=[], objects_bucket_name="objects",
             activities_bucket_name="activities", r=None, w=None, dw=None,
@@ -673,6 +670,7 @@ class RiakBackend(BaseBackend):
 
         return reordered_results
 
+<<<<<<< HEAD
     def _extract_id(self, activity_or_id):
         """
         Helper that returns an id if the activity has one.
@@ -693,6 +691,8 @@ class RiakBackend(BaseBackend):
                 pass
         return this_id
 
+=======
+>>>>>>> Started to add initial scaffolding for testing
     def _get_timestamp(self):
         """
         returns a unix timestamp representing the ``datetime`` object
@@ -708,3 +708,7 @@ class RiakBackend(BaseBackend):
         :return: a new id
         """
         return uuid.uuid1().hex
+<<<<<<< HEAD
+=======
+
+>>>>>>> Started to add initial scaffolding for testing

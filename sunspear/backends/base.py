@@ -1,4 +1,10 @@
+<<<<<<< HEAD
 from __future__ import absolute_import, division, print_function, unicode_literals
+=======
+from sunspear.activitystreams.models import Activity, ReplyActivity, LikeActivity
+from sunspear.exceptions import (
+    SunspearDuplicateEntryException, SunspearInvalidActivityException, SunspearInvalidObjectException)
+>>>>>>> Start building more of the db api and tests
 
 import copy
 import uuid

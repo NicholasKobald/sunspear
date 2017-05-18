@@ -670,7 +670,6 @@ class RiakBackend(BaseBackend):
 
         return reordered_results
 
-<<<<<<< HEAD
     def _extract_id(self, activity_or_id):
         """
         Helper that returns an id if the activity has one.
@@ -691,8 +690,6 @@ class RiakBackend(BaseBackend):
                 pass
         return this_id
 
-=======
->>>>>>> Started to add initial scaffolding for testing
     def _get_timestamp(self):
         """
         returns a unix timestamp representing the ``datetime`` object
@@ -708,7 +705,3 @@ class RiakBackend(BaseBackend):
         :return: a new id
         """
         return uuid.uuid1().hex
-<<<<<<< HEAD
-=======
-
->>>>>>> Started to add initial scaffolding for testing

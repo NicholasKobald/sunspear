@@ -1,20 +1,18 @@
 from __future__ import absolute_import, division, print_function, unicode_literals
 
 import datetime
-
 import six
-from mock import ANY, call, MagicMock
-from nose.tools import eq_, ok_, raises
 from mock import MagicMock, call, ANY
 
 from sunspear.aggregators.property import PropertyAggregator
 from sunspear.backends.riak import RiakBackend
 from sunspear.compat import must_be_str
 from sunspear.exceptions import SunspearValidationException
+from nose.tools import eq_, ok_, raises
 
 riak_connection_options = {
     "nodes": [
-        {'http_port': 8098, 'host': '127.0.0.1'}],
+        {'http_port': 8098, 'host': '192.168.99.100'}],
     'protocol': 'http',
 }
 
@@ -1705,10 +1703,10 @@ class TestIndexes(object):
 
         self._backend.create_obj(actor2)
 
-        #create the activity
+        # create the activity
         self._backend.create_activity({"id": 5, "title": "Stream Item", "verb": "post", "actor": actor, "object": obj})
 
-        #now create a reply for the activity
+        # now create a reply for the activity
         like_activity_dict, activity_obj_dict = self._backend.sub_activity_create(
             5, actor2_id, "", sub_activity_verb='like')
 

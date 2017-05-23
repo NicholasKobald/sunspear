@@ -455,39 +455,39 @@ class RiakBackend(BaseBackend):
         """
         activities = self._extract_sub_activities(activities)
 
-        #collect a list of unique object ids. We only iterate through the fields that we know
-        #for sure are objects. User is responsible for hydrating all other fields.
+        # collect a list of unique object ids. We only iterate through the fields that we know
+        # for sure are objects. User is responsible for hydrating all other fields.
         object_ids = set()
         for activity in activities:
             object_ids.update(self._extract_object_keys(activity))
 
-        #Get the objects for the ids we have collected
+        # Get the objects for the ids we have collected
         objects = self.get_obj(object_ids)
         objects_dict = dict(((obj["id"], obj,) for obj in objects))
 
-        #We also need to extract any activities that were diguised as objects. IE activities with
-        #objectType=activity
+        # We also need to extract any activities that were diguised as objects. IE activities with
+        # objectType=activity
         activities_in_objects_ids = set()
 
-        #replace the object ids with the hydrated objects
+        # replace the object ids with the hydrated objects
         for activity in activities:
             activity = self._dehydrate_object_keys(activity, objects_dict)
-            #Extract keys of any activities that were objects
+            # Extract keys of any activities that were objects
             activities_in_objects_ids.update(self._extract_activity_keys(activity, skip_sub_activities=True))
 
-        #If we did have activities that were objects, we need to hydrate those activities and
-        #the objects for those activities
+        # If we did have activities that were objects, we need to hydrate those activities and
+        # the objects for those activities
         if activities_in_objects_ids:
             sub_activities = self._get_many_activities(activities_in_objects_ids)
             activities_in_objects_dict = dict(((sub_activity["id"], sub_activity,) for sub_activity in sub_activities))
             for activity in activities:
                 activity = self._dehydrate_sub_activity(activity, activities_in_objects_dict, skip_sub_activities=True)
 
-                #we have to do one more round of object dehydration for our new sub-activities
+                # we have to do one more round of object dehydration for our new sub-activities
                 object_ids.update(self._extract_object_keys(activity))
 
-            #now get all the objects we don't already have and for sub-activities and and hydrate them into
-            #our list of activities
+            # now get all the objects we don't already have and for sub-activities and and hydrate them into
+            # our list of activities
             object_ids -= set(objects_dict.keys())
             objects = self.get_obj(object_ids)
             for obj in objects:
@@ -517,7 +517,7 @@ class RiakBackend(BaseBackend):
                 for sub_activity in sub_activities:
                     activities_dict[sub_activity["id"]] = sub_activity
 
-            #Dehydrate out any subactivities we may have
+            # Dehydrate out any subactivities we may have
             for activity in activities:
                 activity = self._dehydrate_sub_activity(activity, activities_dict)
 

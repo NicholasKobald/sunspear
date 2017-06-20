@@ -3,6 +3,7 @@ from __future__ import absolute_import, division, print_function, unicode_litera
 import datetime
 import six
 from mock import MagicMock, call, ANY
+import os
 
 from sunspear.aggregators.property import PropertyAggregator
 from sunspear.backends.riak import RiakBackend
@@ -12,12 +13,13 @@ from nose.tools import eq_, ok_, raises
 
 riak_connection_options = {
     "nodes": [
-        {'http_port': 8098, 'host': '127.0.0.1'}],
+        {'http_port': 8098, 'host': os.environ.get('RIAK_HOST', '127.0.0.1')}],
     'protocol': 'http',
 }
 
 
 class TestRiakBackend(object):
+
     def setUp(self):
         backend = RiakBackend(**riak_connection_options)
         self._backend = backend

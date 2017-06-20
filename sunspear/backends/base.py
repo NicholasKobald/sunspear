@@ -7,7 +7,8 @@ from sunspear.activitystreams.models import (Activity, LikeActivity, Model,
                                              ReplyActivity)
 from sunspear.exceptions import (SunspearDuplicateEntryException,
                                  SunspearInvalidActivityException,
-                                 SunspearInvalidObjectException)
+                                 SunspearInvalidObjectException,
+                                 SunspearOperationNotSupportedException)
 
 __all__ = ('BaseBackend', 'SUB_ACTIVITY_MAP')
 
@@ -311,6 +312,15 @@ class BaseBackend(object):
     def obj_get(self, obj, **kwargs):
         raise NotImplementedError()
 
+    def is_sub_activity_verb_valid(self, sub_activity_verb):
+        return sub_activity_verb.lower() in SUB_ACTIVITY_MAP
+
+    def get_sub_activity_model(self, sub_activity_verb):
+        return SUB_ACTIVITY_MAP[sub_activity_verb.lower()][0]
+
+    def get_sub_activity_attribute(self, sub_activity_verb):
+        return SUB_ACTIVITY_MAP[sub_activity_verb.lower()][1]
+
     def create_sub_activity(self, activity, actor, content, extra={}, sub_activity_verb="", **kwargs):
         """
         Creates a new sub-activity as a child of ``activity``.
@@ -336,6 +346,9 @@ class BaseBackend(object):
         activity_id = self._extract_id(activity)
         if not activity_id:
             raise SunspearInvalidActivityException()
+
+        if not self.is_sub_activity_verb_valid(sub_activity_verb):
+            raise SunspearOperationNotSupportedException('Verb not supported')
 
         return self.sub_activity_create(activity, actor, content, extra=extra, sub_activity_verb=sub_activity_verb,
             **kwargs)

@@ -27,7 +27,7 @@ setup(
         'six',
         'riak==2.5.4',
         'protobuf==2.6.1',
-        'sqlalchemy==1.1.3',
+        'sqlalchemy==1.1.14',
         'MySQL-python==1.2.5',
         'six'
     ],

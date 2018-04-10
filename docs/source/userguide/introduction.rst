@@ -49,7 +49,7 @@ The main takeaway points are:
 .. note::
     For more info, see the specifications for `activity <http://activitystrea.ms/specs/json/1.0/#activity>`_ and `object <http://activitystrea.ms/specs/json/1.0/#object>`_.
 
-**Sunspear** also implements parts of some extensions to the specificiations. More specifically, `Audience Targeting <http://activitystrea.ms/specs/json/targeting/1.0/>`_ and `Responses <http://activitystrea.ms/specs/json/replies/1.0/>`_.
+**Sunspear** also implements parts of some extensions to the specification. More specifically, `Audience Targeting <http://activitystrea.ms/specs/json/targeting/1.0/>`_ and `Responses <http://activitystrea.ms/specs/json/replies/1.0/>`_.
 
 What it isn't
 --------------

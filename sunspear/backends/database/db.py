@@ -63,10 +63,13 @@ DICT_FIELDS = Activity._media_fields + Object._media_fields + Activity._object_f
 
 class DatabaseBackend(BaseBackend):
 
-    def __init__(self, db_connection_string=None, verbose=False, poolsize=10,
-                 max_overflow=5, **kwargs):
-        self._engine = create_engine(db_connection_string, echo=verbose, poolclass=QueuePool,
-                                     pool_size=poolsize, max_overflow=max_overflow, convert_unicode=True)
+    def __init__(self, db_connection_string=None, verbose=False, poolsize=10, max_overflow=5, **kwargs):
+        self._engine = create_engine(db_connection_string,
+                                     echo=verbose,
+                                     poolclass=QueuePool,
+                                     pool_size=poolsize,
+                                     max_overflow=max_overflow,
+                                     convert_unicode=True)
 
     @property
     def engine(self):

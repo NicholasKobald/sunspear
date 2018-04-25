@@ -17,6 +17,7 @@ SUB_ACTIVITY_MAP = {
 
 
 class BaseBackend(object):
+
     def clear_all_objects(self):
         """
         Clears all objects from the backend.

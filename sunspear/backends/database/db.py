@@ -17,7 +17,6 @@ under the License.
 """
 from __future__ import absolute_import, unicode_literals
 
-import calendar
 import copy
 import datetime
 import json
@@ -29,10 +28,9 @@ from dateutil.parser import parse
 from sqlalchemy import create_engine, sql
 from sqlalchemy.pool import QueuePool
 from sunspear.activitystreams.models import Activity, Model, Object
-from sunspear.backends.base import SUB_ACTIVITY_MAP, BaseBackend
-from sunspear.exceptions import (SunspearDuplicateEntryException,
-                                 SunspearOperationNotSupportedException,
-                                 SunspearValidationException)
+from sunspear.backends.base import BaseBackend
+from sunspear.exceptions import SunspearOperationNotSupportedException
+
 
 from . import schema
 

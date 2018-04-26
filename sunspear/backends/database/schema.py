@@ -4,7 +4,7 @@ import types as custom_types
 
 metadata = MetaData()
 
-objects_table = Table('objects', metadata,
+objects_table = Table('sgactivitystream_objects', metadata,
                       Column('id', String(32), primary_key=True),
                       Column('object_type', String(256), nullable=False),
                       Column('display_name', String(256)),

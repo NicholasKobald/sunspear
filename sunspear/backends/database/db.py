@@ -64,12 +64,13 @@ DICT_FIELDS = Activity._media_fields + Object._media_fields + Activity._object_f
 class DatabaseBackend(BaseBackend):
 
     def __init__(self, db_connection_string=None, verbose=False, poolsize=10, max_overflow=5, **kwargs):
-        self._engine = create_engine(db_connection_string,
-                                     echo=verbose,
-                                     poolclass=QueuePool,
-                                     pool_size=poolsize,
-                                     max_overflow=max_overflow,
-                                     convert_unicode=True)
+        self._engine = create_engine(
+            db_connection_string,
+            echo=verbose,
+            poolclass=QueuePool,
+            pool_size=poolsize,
+            max_overflow=max_overflow,
+            convert_unicode=True)
 
     @property
     def engine(self):
@@ -114,7 +115,10 @@ class DatabaseBackend(BaseBackend):
         obj_dict = self._get_parsed_and_validated_obj_dict(obj)
         obj_db_schema_dict = self._obj_dict_to_db_schema(obj_dict)
 
-        self.engine.execute(self.objects_table.insert(), [obj_db_schema_dict])
+        if self.obj_exists(obj):
+            self.obj_update(obj)
+        else:
+            self.engine.execute(self.objects_table.insert(), [obj_db_schema_dict])
 
         return obj_dict
 

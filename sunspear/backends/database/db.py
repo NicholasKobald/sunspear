@@ -25,8 +25,10 @@ import uuid
 import six
 from dateutil import tz
 from dateutil.parser import parse
+
 from sqlalchemy import create_engine, sql
 from sqlalchemy.pool import QueuePool
+from sqlalchemy.sql.expression import insert
 from sunspear.activitystreams.models import Activity, Model, Object
 from sunspear.backends.base import BaseBackend
 from sunspear.exceptions import SunspearOperationNotSupportedException

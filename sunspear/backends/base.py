@@ -102,7 +102,7 @@ class BaseBackend(object):
                         new_obj = self.create_obj(value)
                         objs_created.append(new_obj)
                 except Exception:
-                    #there was an error, undo everything we just did
+                    # there was an error, undo everything we just did
                     self._rollback(objs_created, objs_modified)
                     raise
 
@@ -230,7 +230,6 @@ class BaseBackend(object):
         :type obj: dict
         :param obj: obj we want to store in the backend
 
-        :raises: ``SunspearDuplicateEntryException`` if the record already exists in the database.
         :return: dict representing the new obj.
         """
         obj_id = self._extract_id(obj)

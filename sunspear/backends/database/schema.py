@@ -31,8 +31,8 @@ activities_table = Table('sgactivitystream_activities', metadata,
 
 replies_table = Table('replies', metadata,
                       Column('id', String(32), primary_key=True),
-                      Column('in_reply_to', ForeignKey('activities.id', ondelete='CASCADE'), nullable=False),
-                      Column('actor', ForeignKey('objects.id', ondelete='CASCADE'), nullable=False),
+                      Column('in_reply_to', ForeignKey('sgactivitiystream_activities.id', ondelete='CASCADE'), nullable=False),
+                      Column('actor', ForeignKey('sgactivitystream_objects.id', ondelete='CASCADE'), nullable=False),
                       Column('published', DateTime(timezone=True), nullable=False),
                       Column('updated', DateTime(timezone=True)),
                       Column('content', Text),
@@ -40,8 +40,8 @@ replies_table = Table('replies', metadata,
 
 likes_table = Table('likes', metadata,
                     Column('id', String(32), primary_key=True),
-                    Column('in_reply_to', ForeignKey('activities.id', ondelete='CASCADE'), nullable=False),
-                    Column('actor', ForeignKey('objects.id', ondelete='CASCADE'), nullable=False),
+                    Column('in_reply_to', ForeignKey('sgactivitystream_activities.id', ondelete='CASCADE'), nullable=False),
+                    Column('actor', ForeignKey('sgactivitystream_objects.id', ondelete='CASCADE'), nullable=False),
                     Column('published', DateTime(timezone=True), nullable=False),
                     Column('content', Text),
                     Column('other_data', custom_types.JSONDict()),
@@ -49,23 +49,23 @@ likes_table = Table('likes', metadata,
 
 to_table = Table('to', metadata,
                  Column('id', Integer, primary_key=True),
-                 Column('object', ForeignKey('objects.id', ondelete='CASCADE')),
-                 Column('activity', ForeignKey('activities.id', ondelete='CASCADE')))
+                 Column('object', ForeignKey('sgactivitystream_objects.id', ondelete='CASCADE')),
+                 Column('activity', ForeignKey('sgactivitystream_activities.id', ondelete='CASCADE')))
 
 bto_table = Table('bto', metadata,
                   Column('id', Integer, primary_key=True),
-                  Column('object', ForeignKey('objects.id', ondelete='CASCADE')),
-                  Column('activity', ForeignKey('activities.id', ondelete='CASCADE')))
+                  Column('object', ForeignKey('sgactivitystream_objects.id', ondelete='CASCADE')),
+                  Column('activity', ForeignKey('sgactivitystream_activities.id', ondelete='CASCADE')))
 
 cc_table = Table('cc', metadata,
                  Column('id', Integer, primary_key=True),
-                 Column('object', ForeignKey('objects.id', ondelete='CASCADE')),
-                 Column('activity', ForeignKey('activities.id', ondelete='CASCADE')))
+                 Column('object', ForeignKey('sgactivitystream_objects.id', ondelete='CASCADE')),
+                 Column('activity', ForeignKey('sgactivitystream_activities.id', ondelete='CASCADE')))
 
 bcc_table = Table('bcc', metadata,
                   Column('id', Integer, primary_key=True),
-                  Column('object', ForeignKey('objects.id', ondelete='CASCADE')),
-                  Column('activity', ForeignKey('activities.id', ondelete='CASCADE')))
+                  Column('object', ForeignKey('sgactivitystream_objects.id', ondelete='CASCADE')),
+                  Column('activity', ForeignKey('sgactivitystream_activities.id', ondelete='CASCADE')))
 
 tables = {
     'objects': objects_table,

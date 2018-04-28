@@ -28,7 +28,6 @@ from dateutil.parser import parse
 
 from sqlalchemy import create_engine, sql
 from sqlalchemy.pool import QueuePool
-from sqlalchemy.sql.expression import insert
 from sunspear.activitystreams.models import Activity, Model, Object
 from sunspear.backends.base import BaseBackend
 from sunspear.exceptions import SunspearOperationNotSupportedException
@@ -48,12 +47,12 @@ DB_OBJ_FIELD_MAPPING = {
 DB_ACTIVITY_FIELD_MAPPING = {
     'id': 'id',
     'verb': 'verb',
-    'actor': 'actor',
-    'object': 'object',
-    'target': 'target',
-    'author': 'author',
-    'generator': 'generator',
-    'provider': 'provider',
+    'actor': 'actor_id',
+    'object': 'object_id',
+    'target': 'target_id',
+    'author': 'author_id',
+    'generator': 'generator_id',
+    'provider': 'provider_id',
     'content': 'content',
     'published': 'published',
     'updated': 'updated',
@@ -120,7 +119,7 @@ class DatabaseBackend(BaseBackend):
         if self.obj_exists(obj):
             self.obj_update(obj)
         else:
-            self.engine.execute(self.objects_table.insert(), [obj_db_schema_dict])
+            self.engine.execute(self.objects_table.insert(), [obj_db_schema_dict]).close()
 
         return obj_dict
 
@@ -167,7 +166,7 @@ class DatabaseBackend(BaseBackend):
 
     def activity_create(self, activity, **kwargs):
         """
-        Creates an activity. This assumes the activity is already dehydrated (ie has refrences
+        Creates an activity. This assumes the activity is already dehydrated (ie has references
         to the objects and not the actual objects itself)
         """
         activity = Activity(activity, backend=self)
@@ -177,7 +176,7 @@ class DatabaseBackend(BaseBackend):
 
         activity_db_schema_dict = self._activity_dict_to_db_schema(activity_dict)
 
-        self.engine.execute(self.activities_table.insert(), [activity_db_schema_dict])
+        self.engine.execute(self.activities_table.insert(), [activity_db_schema_dict]).close()
 
         return self.get_activity(activity_dict)
 
@@ -224,7 +223,7 @@ class DatabaseBackend(BaseBackend):
                 activity[key] = activity_audience_targeting_objs
 
         # For all of the objects in the activity, find out which ones actually already have existing
-        # objects in the database
+        # entries in the database
         obj_ids = self._flatten([ids_of_objs_with_no_dict, activity_objs.keys()])
 
         s = self._get_select_multiple_objects_query(obj_ids)
@@ -235,20 +234,20 @@ class DatabaseBackend(BaseBackend):
         objs_need_to_be_updated = []
 
         for obj_id, obj in activity_objs.items():
-            parsed_validated_schema_dict = self._get_parsed_and_validated_obj_dict(obj)
-            parsed_validated_schema_dict = self._obj_dict_to_db_schema(parsed_validated_schema_dict)
-            if obj_id not in results:
-                objs_need_to_be_inserted.append(parsed_validated_schema_dict)
-            else:
-                objs_need_to_be_updated.append(parsed_validated_schema_dict)
+            # parsed_validated_schema_dict = self._get_parsed_and_validated_obj_dict(obj)
+            self.obj_create(obj)
+            # if obj_id not in results:
+            #   objs_need_to_be_inserted.append(parsed_validated_schema_dict)
+            # else:
+            #    objs_need_to_be_updated.append(parsed_validated_schema_dict)
 
         # Upsert all objects for the activity
-        with self.engine.begin() as connection:
-            if objs_need_to_be_inserted:
-                connection.execute(self.objects_table.insert(), objs_need_to_be_inserted)
-            for obj in objs_need_to_be_updated:
-                connection.execute(
-                    self.objects_table.update().where(self.objects_table.c.id == self._extract_id(obj)).values(**obj))
+        # with self.engine.begin() as connection:
+        #    if objs_need_to_be_inserted:
+        #        connection.execute(self.objects_table.insert(), objs_need_to_be_inserted)
+        #    for obj in objs_need_to_be_updated:
+        #        connection.execute(
+        #            self.objects_table.update().where(self.objects_table.c.id == self._extract_id(obj)).values(**obj))
 
         return_val = self.activity_create(activity, **kwargs)
 

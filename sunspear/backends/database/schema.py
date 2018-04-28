@@ -1,3 +1,4 @@
+from datetime import datetime
 from sqlalchemy import Table, Column, DateTime, Integer, String, Text, MetaData, ForeignKey, UniqueConstraint
 import types as custom_types
 
@@ -7,12 +8,12 @@ metadata = MetaData()
 objects_table = Table('sgactivitystream_objects', metadata,
                       Column('id', String(32), primary_key=True),
                       Column('object_type', String(256), nullable=False),
-                      Column('display_name', String(256)),
-                      Column('content', Text),
+                      Column('display_name', String(256), default=''),
+                      Column('content', Text, default=''),
                       Column('published', DateTime(timezone=True), nullable=False),
-                      Column('updated', DateTime(timezone=True)),
-                      Column('image', custom_types.JSONSmallDict(4096)),
-                      Column('other_data', custom_types.JSONDict()))
+                      Column('updated', DateTime(timezone=True), default=datetime.now(), onupdate=datetime.now()),
+                      Column('image', custom_types.JSONSmallDict(4096), default={}),
+                      Column('other_data', custom_types.JSONDict(), default={}))
 
 activities_table = Table('sgactivitystream_activities', metadata,
                          Column('id', String(32), primary_key=True),
@@ -23,11 +24,11 @@ activities_table = Table('sgactivitystream_activities', metadata,
                          Column('author_id', ForeignKey('sgactivitystream_objects.id', ondelete='SET NULL')),
                          Column('generator_id', ForeignKey('sgactivitystream_objects.id', ondelete='SET NULL')),
                          Column('provider_id', ForeignKey('sgactivitystream_objects.id', ondelete='SET NULL')),
-                         Column('content', Text),
+                         Column('content', Text, default-''),
                          Column('published', DateTime(timezone=True), nullable=False),
-                         Column('updated', DateTime(timezone=True)),
-                         Column('icon', custom_types.JSONSmallDict(4096)),
-                         Column('other_data', custom_types.JSONDict()))
+                         Column('updated', DateTime(timezone=True), default=datetime.now(), onupdate=datetime.now()),
+                         Column('icon', custom_types.JSONSmallDict(4096), default={}),
+                         Column('other_data', custom_types.JSONDict(), default={}))
 
 replies_table = Table('replies', metadata,
                       Column('id', String(32), primary_key=True),
@@ -35,7 +36,7 @@ replies_table = Table('replies', metadata,
                       Column('actor', ForeignKey('sgactivitystream_objects.id', ondelete='CASCADE'), nullable=False),
                       Column('published', DateTime(timezone=True), nullable=False),
                       Column('updated', DateTime(timezone=True)),
-                      Column('content', Text),
+                      Column('content', Text, nullable=False),
                       Column('other_data', custom_types.JSONDict()))
 
 likes_table = Table('likes', metadata,

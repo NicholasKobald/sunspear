@@ -690,11 +690,3 @@ class RiakBackend(BaseBackend):
         dt_obj = datetime.datetime.utcnow()
         return int((calendar.timegm(dt_obj.utctimetuple()) * 1000)) + (dt_obj.microsecond // 1000)
 
-    def get_new_id(self):
-        """
-        Generates a new unique ID. The default implementation uses uuid1 to
-        generate a unique ID.
-
-        :return: a new id
-        """
-        return uuid.uuid1().hex

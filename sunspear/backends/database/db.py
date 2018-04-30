@@ -20,7 +20,6 @@ from __future__ import absolute_import, unicode_literals
 import copy
 import datetime
 import json
-import uuid
 
 import six
 from dateutil import tz
@@ -308,18 +307,9 @@ class DatabaseBackend(BaseBackend):
 
         # replace the object ids with the hydrated objects
         for activity in activities:
-            activity = self._dehydrate_object_keys(activity, objects_dict)
+            self._dehydrate_object_keys(activity, objects_dict)
 
         return activities
-
-    def get_new_id(self):
-        """
-        Generates a new unique ID. The default implementation uses uuid1 to
-        generate a unique ID.
-
-        :return: a new id
-        """
-        return uuid.uuid1().hex
 
     def _get_raw_activities(self, activity_ids, **kwargs):
         activity_ids = map(self._extract_id, activity_ids)

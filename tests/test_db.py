@@ -507,7 +507,6 @@ class TestDatabaseBackend(object):
         sub_activity_exists = self._engine.execute(sql.select([sql.exists().where(self._backend.likes_table.c.id == like_activity_dict['id'])])).scalar()
         ok_(sub_activity_exists)
 
-
     def _datetime_to_db_compatibal_str(self, datetime_instance):
         return datetime_instance.strftime('%Y-%m-%d %H:%M:%S')
 

@@ -151,7 +151,6 @@ class DatabaseBackend(BaseBackend):
 
         return results
 
-
     def obj_delete(self, obj, **kwargs):
         obj_id = self._extract_id(obj)
 
@@ -228,42 +227,16 @@ class DatabaseBackend(BaseBackend):
                         ids_of_objs_with_no_dict.append(activity_obj_id)
                 activity[key] = activity_audience_targeting_objs
 
-        # For all of the objects in the activity, find out which ones actually already have existing
-        # entries in the database
-        obj_ids = self._flatten([ids_of_objs_with_no_dict, activity_objs.keys()])
-
-        s = self._get_select_multiple_objects_query(obj_ids)
-        results = self.engine.execute(s).fetchall()
-        results = self._flatten(results)
-
-        objs_need_to_be_inserted = []
-        objs_need_to_be_updated = []
-
         for obj_id, obj in activity_objs.items():
-            # parsed_validated_schema_dict = self._get_parsed_and_validated_obj_dict(obj)
             self.obj_create(obj)
-            # if obj_id not in results:
-            #   objs_need_to_be_inserted.append(parsed_validated_schema_dict)
-            # else:
-            #    objs_need_to_be_updated.append(parsed_validated_schema_dict)
 
-        # Upsert all objects for the activity
-        # with self.engine.begin() as connection:
-        #    if objs_need_to_be_inserted:
-        #        connection.execute(self.objects_table.insert(), objs_need_to_be_inserted)
-        #    for obj in objs_need_to_be_updated:
-        #        connection.execute(
-        #            self.objects_table.update().where(self.objects_table.c.id == self._extract_id(obj)).values(**obj))
-
-        return_val = self.activity_create(activity, **kwargs)
-
-        return return_val
+        return self.activity_create(activity, **kwargs)
 
     def activity_get(self, activity_ids, **kwargs):
         activity_ids = self._listify(activity_ids)
         activities = self._get_raw_activities(activity_ids, **kwargs)
         activities = self.hydrate_activities(activities)
-
+        # assert len(activities) == 1, "activity_get should return exactly 1 activity"
         return activities
 
     def sub_activity_create(self, activity, actor, content, extra={}, sub_activity_verb="", published=None, **kwargs):

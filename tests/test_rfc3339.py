@@ -9,10 +9,10 @@ import time
 
 
 class TestRFC3339(object):
-    '''
+    """
     Test the use of the timezone saved locally. Since it is hard to test using
     doctest.
-    '''
+    """
 
     def setUp(self):
         local_utcoffset = _utc_offset(datetime.datetime.now(), True)

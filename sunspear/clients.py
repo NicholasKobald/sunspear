@@ -120,7 +120,7 @@ class SunspearClient(object):
         """
         return self._backend.get_obj(object_ids)
 
-    def get_activities(self, activity_ids=[], **kwargs):
+    def get_activities(self, activity_ids, **kwargs):
         """
         Gets a list of activities. Specific backends may support other arguments. Please
         see reference of the specific backends to see all ``kwargs`` supported.
@@ -128,7 +128,10 @@ class SunspearClient(object):
         :type activity_ids: list
         :param activity_ids: The list of activities you want to retrieve
         """
-        return self._backend.get_activity(activity_ids=activity_ids, **kwargs)
+        # if activity_ids is None:
+        #    activity_ids = []
+
+        return self._backend.get_activity(activity_ids, **kwargs)
 
     def get_backend(self):
         """

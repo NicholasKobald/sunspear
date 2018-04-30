@@ -152,6 +152,7 @@ class DatabaseBackend(BaseBackend):
 
         return results
 
+
     def obj_delete(self, obj, **kwargs):
         obj_id = self._extract_id(obj)
 
@@ -179,6 +180,12 @@ class DatabaseBackend(BaseBackend):
         self.engine.execute(self.activities_table.insert(), [activity_db_schema_dict]).close()
 
         return self.get_activity(activity_dict)
+
+    def activity_delete(self, activity, **kwargs):
+        activity_id = activity['id']
+        statement = self.activities_table.delete().where(
+            self.activities_table.c.id == activity_id)
+        self.engine.execute(statement)
 
     def _extract_activity_obj_key(self, obj_or_value):
         activity_obj = None

@@ -232,8 +232,23 @@ class DatabaseBackend(BaseBackend):
 
         return self.activity_create(activity, **kwargs)
 
-    def activity_get(self, activity_ids, **kwargs):
-        activity_ids = self._listify(activity_ids)
+    def activity_get(self,
+                     activity_ids,
+                     raw_filters=None,
+                     filters="",
+                     include_public=False,
+                     audience_targeting=None,
+                     aggregation_pipeline=None,
+                     **kwargs):
+        if filters is None:
+            filters = {}
+        if audience_targeting is None:
+            audience_targeting = []
+        if aggregation_pipeline is None:
+            aggregation_pipeline = []
+        activity_ids = self._listify(activity_ids)  # TODO: likely don't need to listify here.
+
+
         activities = self._get_raw_activities(activity_ids, **kwargs)
         activities = self.hydrate_activities(activities)
         # assert len(activities) == 1, "activity_get should return exactly 1 activity"
@@ -285,7 +300,7 @@ class DatabaseBackend(BaseBackend):
         return activities
 
     def _get_raw_activities(self, activity_ids, **kwargs):
-        activity_ids = map(self._extract_id, activity_ids)
+        activity_ids = map(self._extract_id, activity_ids)  # Likely don't need to do this
         if not activity_ids:
             return []
 

@@ -11,6 +11,7 @@ __all__ = ('Model', 'Activity', 'ReplyActivity', 'LikeActivity',
 
 
 class Model(object):
+
     _required_fields = []
     _media_fields = []
     _reserved_fields = []
@@ -137,6 +138,7 @@ class Model(object):
 
 
 class Activity(Model):
+
     _required_fields = ['verb', 'actor', 'object']
     _media_fields = ['icon']
     _reserved_fields = ['updated']
@@ -157,7 +159,7 @@ class Activity(Model):
 
     def get_parsed_sub_activity_dict(self, actor, content="", verb="reply", object_type="reply", \
         collection="replies", activity_class=None, extra={}, published=None, **kwargs):
-        #TODO: Doesn't feel like this should be here Feels like it belongs in the backend.
+        # TODO: Doesn't feel like this should be here Feels like it belongs in the backend.
 
         if published is None:
             published = datetime.datetime.utcnow()

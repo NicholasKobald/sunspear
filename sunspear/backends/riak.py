@@ -20,7 +20,6 @@ from __future__ import absolute_import
 import calendar
 import copy
 import datetime
-import uuid
 
 from riak import RiakClient
 from sunspear.activitystreams.models import Activity, Model, Object
@@ -144,6 +143,7 @@ JS_REDUCE_OBJS = """
 
 
 class RiakBackend(BaseBackend):
+
     def __init__(
         self, protocol="pbc", nodes=[], objects_bucket_name="objects",
             activities_bucket_name="activities", **kwargs):
@@ -224,7 +224,7 @@ class RiakBackend(BaseBackend):
 
         riak_obj.store()
 
-        #finally save the data
+        # finally save the data
         return obj_dict
 
     def set_general_indexes(self, riak_object):
@@ -330,7 +330,7 @@ class RiakBackend(BaseBackend):
         return self.activity_create(activity, **kwargs)
 
     def activity_get(
-        self, activity_ids=[], raw_filter="", filters={}, include_public=False,
+        self, activity_ids, raw_filter="", filters={}, include_public=False,
             audience_targeting={}, aggregation_pipeline=[], **kwargs):
         """
         Gets a list of activities. You can also group activities by providing a list of attributes to group
@@ -343,7 +343,7 @@ class RiakBackend(BaseBackend):
             Filters do not work for nested dictionaries.
         :type raw_filter: string
         :param raw_filter: allows you to specify a javascript function as a string. The function should return ``true`` if the activity should be included in the result set
-            or ``false`` it shouldn't. If you specify a raw filter, the filters specified in ``filters`` will not run. How ever, the results will still be filtered based on
+            or ``false`` it shouldn't. If you specify a raw filter, the filters specified in ``filters`` will not run. However, the results will still be filtered based on
             the ``audience_targeting`` parameter.
         :type include_public: boolean
         :param include_public: If ``True``, and the ``audience_targeting`` dictionary is defined, activities that are
@@ -575,7 +575,7 @@ class RiakBackend(BaseBackend):
         :param activity_ids: The list of activities you want to retrieve
         :type raw_filter: string
         :param raw_filter: allows you to specify a javascript function as a string. The function should return ``true`` if the activity should be included in the result set
-        or ``false`` it shouldn't. If you specify a raw filter, the filters specified in ``filters`` will not run. How ever, the results will still be filtered based on
+        or ``false`` it shouldn't. If you specify a raw filter, the filters specified in ``filters`` will not run. However, the results will still be filtered based on
         the ``audience_targeting`` parameter.
         :type filters: dict
         :param filters: filters list of activities by key, value pair. For example, ``{'verb': 'comment'}`` would only return activities where the ``verb`` was ``comment``.
@@ -598,9 +598,10 @@ class RiakBackend(BaseBackend):
             results = results.reduce(JS_REDUCE_FILTER_AUD_TARGETTING, options={'arg': {'public': include_public, 'filters': audience_targeting}})
 
         if filters or raw_filter:
-            # An empty `filters` dict would cause all activities to be filtered out. If you wanted that effect, you
-            # wouldn't have to call this function, so let's assume that an empty dict is a typical default value and
-            # should denote that there are no filters to apply.
+            # An empty `filters` dict would cause all activities to be filtered out. If you
+            # wanted that effect, you wouldn't have to call this function, so let's assume that
+            # an empty dict is a typical default value and should denote that there are no
+            # filters to apply.
             filters = filters or None
             results = results.reduce(JS_REDUCE_FILTER_PROP, options={'arg': {'raw_filter': raw_filter, 'filters': filters}})
 

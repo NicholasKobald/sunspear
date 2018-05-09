@@ -163,12 +163,12 @@ class DatabaseBackend(BaseBackend):
 
         return self.engine.execute(sql.select([sql.exists().where(activities_db_table.c.id == activity_id)])).scalar()
 
-    def activity_create(self, activity, **kwargs):
+    def activity_create(self, activity_dict, **kwargs):
         """
         Creates an activity. This assumes the activity is already dehydrated (ie has references
         to the objects and not the actual objects itself)
         """
-        activity = Activity(activity, backend=self)
+        activity = Activity(activity_dict, backend=self)
 
         activity.validate()
         activity_dict = activity.get_parsed_dict()
@@ -176,6 +176,16 @@ class DatabaseBackend(BaseBackend):
         activity_db_schema_dict = self._activity_dict_to_db_schema(activity_dict)
 
         self.engine.execute(self.activities_table.insert(), [activity_db_schema_dict]).close()
+
+        obj_id = activity_dict['object']
+        activity_id = activity_dict['id']
+        for audience_field in ['cc', 'bcc', 'to', 'bto']:
+            if audience_field in activity_dict:
+                table = schema.tables[audience_field]
+                self.engine.execute(table.insert(), dict(
+                    obj_id=obj_id,
+                    activity_id=activity_id
+                )).close()
 
         return self.get_activity(activity_dict)
 
@@ -248,8 +258,6 @@ class DatabaseBackend(BaseBackend):
             aggregation_pipeline = []
         activity_ids = self._listify(activity_ids)  # TODO: likely don't need to listify here.
         activities = self._get_raw_activities(activity_ids, **kwargs)
-
-
         activities = self.hydrate_activities(activities)
         # assert len(activities) == 1, "activity_get should return exactly 1 activity"
         return activities

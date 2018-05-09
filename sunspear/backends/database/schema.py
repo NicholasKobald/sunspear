@@ -50,23 +50,23 @@ likes_table = Table('likes', metadata,
 
 to_table = Table('sgactivitystream_to', metadata,
                  Column('id', Integer, primary_key=True),
-                 Column('object', ForeignKey('sgactivitystream_objects.id', ondelete='CASCADE')),
-                 Column('activity', ForeignKey('sgactivitystream_activities.id', ondelete='CASCADE')))
+                 Column('obj_id', ForeignKey('sgactivitystream_objects.id', ondelete='CASCADE')),
+                 Column('activity_id', ForeignKey('sgactivitystream_activities.id', ondelete='CASCADE')))
 
 bto_table = Table('sgactivitystream_bto', metadata,
                   Column('id', Integer, primary_key=True),
-                  Column('object', ForeignKey('sgactivitystream_objects.id', ondelete='CASCADE')),
-                  Column('activity', ForeignKey('sgactivitystream_activities.id', ondelete='CASCADE')))
+                  Column('obj_id', ForeignKey('sgactivitystream_objects.id', ondelete='CASCADE')),
+                  Column('activity_id', ForeignKey('sgactivitystream_activities.id', ondelete='CASCADE')))
 
 cc_table = Table('sgactivitystream_cc', metadata,
                  Column('id', Integer, primary_key=True),
-                 Column('object', ForeignKey('sgactivitystream_objects.id', ondelete='CASCADE')),
-                 Column('activity', ForeignKey('sgactivitystream_activities.id', ondelete='CASCADE')))
+                 Column('obj_id', ForeignKey('sgactivitystream_objects.id', ondelete='CASCADE')),
+                 Column('activity_id', ForeignKey('sgactivitystream_activities.id', ondelete='CASCADE')))
 
 bcc_table = Table('sgactivitystream_bcc', metadata,
                   Column('id', Integer, primary_key=True),
-                  Column('object', ForeignKey('sgactivitystream_objects.id', ondelete='CASCADE')),
-                  Column('activity', ForeignKey('sgactivitystream_activities.id', ondelete='CASCADE')))
+                  Column('obj_id', ForeignKey('sgactivitystream_objects.id', ondelete='CASCADE')),
+                  Column('activity_id', ForeignKey('sgactivitystream_activities.id', ondelete='CASCADE')))
 
 tables = {
     'objects': objects_table,

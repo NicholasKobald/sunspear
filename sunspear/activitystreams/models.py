@@ -216,7 +216,7 @@ class Activity(Model):
         return _activity, parent_activity
 
     def parse_data(self, data, *args, **kwargs):
-        #TODO Rename to jsonify_dict
+        # TODO Rename to jsonify_dict
         _parsed_data = super(Activity, self).parse_data(data, *args, **kwargs)
         for response_field in self._response_fields:
             if response_field in _parsed_data:

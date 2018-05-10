@@ -92,6 +92,22 @@ class DatabaseBackend(BaseBackend):
     def replies_table(self):
         return schema.tables['replies']
 
+    @property
+    def cc_table(self):
+        return schema.tables['cc']
+
+    @property
+    def bcc_table(self):
+        return schema.tables['bcc']
+
+    @property
+    def to_table(self):
+        return schema.tables['to']
+
+    @property
+    def bto_table(self):
+        return schema.tables['bto']
+
     def _get_connection(self):
         return self.engine.connect()
 
@@ -253,13 +269,21 @@ class DatabaseBackend(BaseBackend):
         if filters is None:
             filters = {}
         if audience_targeting is None:
-            audience_targeting = []
+            audience_targeting = {}
         if aggregation_pipeline is None:
             aggregation_pipeline = []
         activity_ids = self._listify(activity_ids)  # TODO: likely don't need to listify here.
+
+        assert len(audience_targeting) == 1, "I can't be wrong about this assumption, right?"
+
+        for audience_type, object_id in audience_targeting.items():
+            audience_table = schema[audience_type]
+
+            sql.select(['*']).where(audience_table.c.obj_id == object_id)
+
         activities = self._get_raw_activities(activity_ids, **kwargs)
         activities = self.hydrate_activities(activities)
-        # assert len(activities) == 1, "activity_get should return exactly 1 activity"
+
         return activities
 
     def sub_activity_create(self, activity, actor, content, extra={}, sub_activity_verb="", published=None, **kwargs):

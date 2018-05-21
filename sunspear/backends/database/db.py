@@ -274,13 +274,23 @@ class DatabaseBackend(BaseBackend):
             aggregation_pipeline = []
         activity_ids = self._listify(activity_ids)  # TODO: likely don't need to listify here.
 
-        assert len(audience_targeting) == 1, "I can't be wrong about this assumption, right?"
+        assert len(audience_targeting) == 1 or len(audience_targeting) == 0, "I can't be wrong about this. I hope"
 
+        audience_activity_ids = None
         for audience_type, object_id in audience_targeting.items():
-            audience_table = schema[audience_type]
+            # audience_table = schema.tables[audience_type]
+            # audience_query = sql.select([audience_table.c.activity_id]).where(
+            #    audience_table.c.obj_id == object_id)
 
-            sql.select(['*']).where(audience_table.c.obj_id == object_id)
+            audience_activity_ids = self.engine.execute(sql.select([self.activities_table.c.id]).where(
+                self.activities_table.c.actor_id.in_(audience_targeting[audience_type])
+            )).fetchall()
 
+            # audience_activities_query = sql.select(['*']).where(self.activities_table.c.id.in_(audience_query))
+            # result_proxy = self.engine.execute(audience_activities_query)
+
+        if audience_activity_ids is not None and not include_public:  # only filter then??
+            activity_ids = list(set(audience_activity_ids).intersection(set(activity_ids)))
         activities = self._get_raw_activities(activity_ids, **kwargs)
         activities = self.hydrate_activities(activities)
 

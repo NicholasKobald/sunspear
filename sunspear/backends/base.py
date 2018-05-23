@@ -402,8 +402,6 @@ class BaseBackend(object):
         """
         if not isinstance(list_or_string, (list, tuple, set)):
             list_or_string = [list_or_string]
-        else:
-            list_or_string = list_or_string
 
         return list_or_string
 

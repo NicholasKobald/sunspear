@@ -266,6 +266,7 @@ class DatabaseBackend(BaseBackend):
                      audience_targeting=None,
                      aggregation_pipeline=None,
                      **kwargs):
+
         if filters is None:
             filters = {}
         if audience_targeting is None:
@@ -276,6 +277,7 @@ class DatabaseBackend(BaseBackend):
 
         assert len(audience_targeting) == 1 or len(audience_targeting) == 0, "I can't be wrong about this. I hope"
 
+        """
         audience_activity_ids = None
         for audience_type, object_id in audience_targeting.items():
             # audience_table = schema.tables[audience_type]
@@ -288,13 +290,22 @@ class DatabaseBackend(BaseBackend):
 
             # audience_activities_query = sql.select(['*']).where(self.activities_table.c.id.in_(audience_query))
             # result_proxy = self.engine.execute(audience_activities_query)
+        """
+        # if audience_activity_ids is not None and not include_public:  # only filter then??
+        #    activity_ids = list(set(audience_activity_ids) & (set(activity_ids)))
+        self.filter_activities_by_audience(activity_ids, audience_targeting)
 
-        if audience_activity_ids is not None and not include_public:  # only filter then??
-            activity_ids = list(set(audience_activity_ids).intersection(set(activity_ids)))
         activities = self._get_raw_activities(activity_ids, **kwargs)
         activities = self.hydrate_activities(activities)
 
         return activities
+
+    def filter_activities_by_audience(self, activity_ids, audience_targeting):
+        # s = sql.select(['*']).where(self.objects_table.c.id.in_(obj_ids))
+        # TODO: bcc, bto, etc..
+        cc_query = sql.select(['*']).where(self.cc_table.c.activity_id.in_(activity_ids))
+        res = self.engine.execute(cc_query).fetchall()
+        return None
 
     def sub_activity_create(self, activity, actor, content, extra={}, sub_activity_verb="", published=None, **kwargs):
         object_type = kwargs.get('object_type', sub_activity_verb)

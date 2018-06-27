@@ -25,7 +25,6 @@ setup(
         'python-dateutil>=1.5, != 2.0',
         'riak',
         'six',
-        'riak==2.5.4',
         'protobuf==2.6.1',
         'sqlalchemy==1.1.14',
         'MySQL-python==1.2.5',

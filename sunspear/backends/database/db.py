@@ -20,6 +20,7 @@ from __future__ import absolute_import, unicode_literals
 import copy
 import datetime
 import json
+import logging
 
 import six
 from dateutil import tz
@@ -31,8 +32,10 @@ from sunspear.activitystreams.models import Activity, Model, Object
 from sunspear.backends.base import BaseBackend
 from sunspear.exceptions import SunspearOperationNotSupportedException
 
-
 from . import schema
+
+
+logger = logging.getLogger(__name__)
 
 DB_OBJ_FIELD_MAPPING = {
     'id': 'id',
@@ -64,6 +67,8 @@ DICT_FIELDS = Activity._media_fields + Object._media_fields + Activity._object_f
 class DatabaseBackend(BaseBackend):
 
     def __init__(self, db_connection_string=None, verbose=False, poolsize=10, max_overflow=5, **kwargs):
+        if db_connection_string is None:
+            logger.info("WARNING: Not given a valid db connection string")
         self._engine = create_engine(
             db_connection_string,
             echo=verbose,

@@ -146,7 +146,8 @@ class DatabaseBackend(BaseBackend):
     def obj_exists(self, obj, **kwargs):
         obj_id = self._extract_id(obj)
         objs_db_table = self.objects_table
-
+        # this probably needs to use sunspear id now? i think...
+        # mmm..
         return self.engine.execute(sql.select([sql.exists().where(objs_db_table.c.id == obj_id)])).scalar()
 
     def obj_update(self, obj, **kwargs):

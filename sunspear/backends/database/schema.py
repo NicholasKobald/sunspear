@@ -6,15 +6,15 @@ import types as custom_types
 metadata = MetaData()
 
 objects_table = Table('sgactivitystream_streamobject', metadata,
-                      Column('id', String(32), primary_key=True),
+                      Column('id', String(32), primary_key=True, nullable=True),
                       Column('object_type', String(256), nullable=False),
                       Column('display_name', String(256), default=''),
-                      Column('sunspear_id', String(256)),
+                      Column('sunspear_id', String(256), nullable=True),
                       Column('badge_id', ForeignKey('sgrecognition_badge.id', ondelete='SET NULL')),
                       Column('badgerecipient_id', ForeignKey('sgrecognition_badgerecipient.id', ondelete='SET NULL')),
                       Column('checkin_id', ForeignKey('sgcheckin_checkin.id', ondelete='SET NULL')),
                       Column('goal_id', ForeignKey('sggoals_goal.id', ondelete='SET NULL')),
-                      Column('keyresult_id', ForeignKey('sggoals_keyresult.id', ondelete='SET NULL')),
+                      Column('keyresult_id', ForeignKey('sggoals_kyresult.id', ondelete='SET NULL')),
                       Column('oneonone_id', ForeignKey('sgoneonone_oneonone.id', ondelete='SET NULL')),
                       Column('sgnetwork_id', ForeignKey('sgnetworks_sgnetwork.container_ptr_id', ondelete='SET NULL')),
                       Column('team_id', ForeignKey('sgteam_team.id', ondelete='SET NULL')),

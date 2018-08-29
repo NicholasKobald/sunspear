@@ -83,7 +83,7 @@ class Model(object):
         # parse direct and indirect audience targeting
         for c in self._indirect_audience_targeting_fields + self._direct_audience_targeting_fields:
             if c in _parsed_data and _parsed_data[c]:
-                _parsed_data[c] = [obj.parse_data(obj.get_dict()) if isinstance(obj, Model) else obj\
+                _parsed_data[c] = [obj.parse_data(obj.get_dict()) if isinstance(obj, Model) else obj
                     for obj in _parsed_data[c]]
 
         # parse media fields
@@ -96,6 +96,12 @@ class Model(object):
             if isinstance(v, dict) and k not in self._response_fields:
                 _parsed_data[k] = self.parse_data(v)
 
+        if 'id' in _parsed_data:
+            # we need to let the database take care of generating ids
+            # since there are size constraints that the sunspear convention violates,
+            # however to be safe we'll store the sunspear id as well.
+            _parsed_data['sunspear_id'] = _parsed_data['id']
+            del _parsed_data['id']
         return _parsed_data
 
     def get_parsed_dict(self, *args, **kwargs):
@@ -159,8 +165,16 @@ class Activity(Model):
 
         return model_dict
 
-    def get_parsed_sub_activity_dict(self, actor, content="", verb="reply", object_type="reply", \
-        collection="replies", activity_class=None, extra={}, published=None, **kwargs):
+    def get_parsed_sub_activity_dict(self,
+                                     actor,
+                                     content="",
+                                     verb="reply",
+                                     object_type="reply",
+                                     collection="replies",
+                                     activity_class=None,
+                                     extra={},
+                                     published=None,
+                                     **kwargs):
         # TODO: Doesn't feel like this should be here Feels like it belongs in the backend.
 
         if published is None:
@@ -208,7 +222,7 @@ class Activity(Model):
         }
 
         self._dict[collection]['totalItems'] += 1
-        #insert the newest comment at the top of the list
+        # insert the newest comment at the top of the list
         self._dict[collection]['items'].insert(0, _sub_dict)
 
         parent_activity = self.parse_data(self._dict, **kwargs)
